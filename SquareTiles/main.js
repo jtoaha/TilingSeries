@@ -10,11 +10,14 @@ function start() {
 
 document.addEventListener('DOMContentLoaded', start)
 
-function update() {}
+function update() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
 
 function draw() {
-  ctx.fillStyle = 'blue'
-  ctx.fillRect(0, 0, canvas.width, canvas.height)
+  ctx.fillStyle = 'pink'
+  ctx.fillRect(0, 0, canvas.width, canvas.height/1.25)
 }
 
 function mainLoop() {
