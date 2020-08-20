@@ -3,9 +3,14 @@ let ctx = undefined
 var strokeWidth = 5
 var hw = 100
 let r, g, b
+let alpha = .25
+let alphaRate = alpha/50
 r = Math.floor(Math.random() * 256)
 g = Math.floor(Math.random() * 256)
 b = Math.floor(Math.random() * 256)
+let popArray = []
+let pushArray = []
+let frameRate = 30
 
 function start() {
   canvas = document.getElementById('square-canvas')
@@ -13,14 +18,9 @@ function start() {
   canvas.width = window.innerWidth
   canvas.height = window.innerHeight
   ctx.lineWidth = strokeWidth
-  ctx.fillStyle = 'pink'
-  ctx.fillRect(0, 0, canvas.width, canvas.height / 1.25)
-
-  ctx.strokeRect(0, 0, hw, hw)
-
-
-
-
+  // ctx.fillStyle = 'black'
+  // ctx.fillRect(0, 0, canvas.width, canvas.height )
+  //ctx.strokeRect(0, 0, hw, hw)
 
   let rowTracker = 1
   let iStart
@@ -29,28 +29,53 @@ function start() {
     else iStart = (-3 / 4) * hw
     rowTracker++
     for (let i = iStart; i < canvas.width; i += (5 / 4) * hw) {
-      console.log(Math.floor(Math.random() * 256))
       r = Math.floor(Math.random() * 256)
       g = Math.floor(Math.random() * 256)
       b = Math.floor(Math.random() * 256)
 
-      ctx.fillStyle = `rgba(${r},${g},${b}, .25)`
-      ctx.strokeRect(i, j, hw, hw)
-
-      ctx.fillRect(i, j, hw, hw)
+      popArray.push({ i: i, j: j, r: r, g: g, b: b, alpha: 0})
+      // ctx.fillStyle = `rgba(${r},${g},${b}, .25)` //.6 for dark mode //.25 for light mode
     }
   }
+
+  //If Pop Mode:
+  shuffleArray(popArray)
   mainLoop()
 }
 
 document.addEventListener('DOMContentLoaded', start)
 
-function update() {
-
-
-}
+function update() {}
 
 function draw() {
+  ctx.fillStyle = 'white'
+  ctx.fillRect(0, 0, canvas.width, canvas.height )
+
+
+  for (let square of pushArray) {
+    if (square.alpha <= alpha) square.alpha += alphaRate
+    ctx.fillStyle = `rgba(${square.r},${square.g},${square.b},${square.alpha})`
+    ctx.strokeStyle = `rgba(0, 0, 0,${square.alpha*5})`
+    ctx.strokeRect(square.i, square.j, hw, hw)
+    ctx.fillRect(square.i, square.j, hw, hw)
+  }
+
+
+  let currentSquare
+  let pops = Math.floor(Math.random()*3);
+  if (popArray.length) {
+    while(pops > 0){
+     if(frameRate-- === 0)currentSquare = popArray.pop()
+     else continue
+    //Push new Square into the pushArray
+    pushArray.push(currentSquare)
+      //Cycle through the pushArray to display the squares fading in
+
+
+    frameRate = 30;
+      pops--
+  }
+  }
 
 }
 
@@ -58,4 +83,14 @@ function mainLoop() {
   update()
   draw()
   window.setTimeout(mainLoop, 1000 / 60)
+}
+
+/* Randomize array in-place using Durstenfeld shuffle algorithm */
+function shuffleArray(array) {
+  for (var i = array.length - 1; i > 0; i--) {
+    var j = Math.floor(Math.random() * (i + 1))
+    var temp = array[i]
+    array[i] = array[j]
+    array[j] = temp
+  }
 }
