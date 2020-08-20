@@ -99,7 +99,8 @@ function draw() {
 
   if (state === 'stationary') {
     for (let square of popArray) {
-      ctx.fillStyle = `rgba(${square.r},${square.g},${square.b},${1})`
+      if (square.alpha <= 1) square.alpha += .1
+      ctx.fillStyle = `rgba(${square.r},${square.g},${square.b},${square.alpha})`
       ctx.strokeRect(square.i, square.j, hw, hw)
       ctx.fillRect(square.i, square.j, hw, hw)
     }
