@@ -30,6 +30,9 @@ let frameRate = 30
 let flag //added to make resetting easier. To break out of recursive main loop
 let state = 'pop-ups' //Modes: 'pop-ups', 'kaleid', 'stationary'
 
+//For kaleidoscope
+let gradientRate = 15;
+
 function start() {
   canvas = document.getElementById('square-canvas')
   ctx = canvas.getContext('2d')
@@ -53,12 +56,20 @@ function start() {
       g = Math.floor(Math.random() * 256)
       b = Math.floor(Math.random() * 256)
 
+      if(state !== 'kaleid')
       popArray.push({ i: i, j: j, r: r, g: g, b: b, alpha: 0 })
+      else {
+        nextR = Math.floor(Math.random() * 256)
+        nextG = Math.floor(Math.random() * 256)
+        nextB = Math.floor(Math.random() * 256)
+
+          popArray.push({ i: i, j: j, r: r, g: g, b: b, alpha: 0, nextR:nextR, nextG:nextG, nextB:nextB} )
+      }
     }
   }
   //If Pop-Ups Mode, randomize array:
   if (state === 'pop-ups') shuffleArray(popArray)
-
+  if(state === 'kaleid') frameRate = 10
   mainLoop()
 }
 
@@ -73,6 +84,9 @@ function draw() {
   if (state === 'pop-ups') {
     popups()
   }
+
+  if(state === 'kaleid')
+    kaleid()
 }
 
 //Pop-ups Mode: Tiles are set to randomly appear, yet falls into an orderly pattern
@@ -105,6 +119,31 @@ function popups() {
   }
 }
 
+function kaleid(){
+  //For kaleidoscope colors display
+//Doesn't sync up to each square
+for (let square of popArray) {
+  console.log(square.r, square.nextR, "TESTING")
+  if(Math.round(square.r) === square.nextR && Math.round(square.g) === square.nextG && Math.round(square.b) === square.nextB) {
+    square.nextR = Math.floor(Math.random() * 256)
+    square.nextG = Math.floor(Math.random() * 256)
+    square.nextB = Math.floor(Math.random() * 256)
+    // square.increment = (square.nextR-square.r)/gradientRate
+  }
+
+  ctx.fillStyle = `rgba(${square.r},${square.g},${square.b},${.5})`
+  ctx.strokeStyle = `rgba(0, 0, 0,${square.alpha*5})`
+  ctx.strokeRect(square.i, square.j, hw, hw)
+  ctx.fillRect(square.i, square.j, hw, hw)
+      //If current values matches up to next values, it's time to have a new set of next values
+
+
+        square.r += (square.nextR-square.r)/gradientRate
+        square.g += (square.nextG-square.g)/gradientRate
+        square.b += (square.nextB-square.b)/gradientRate
+}
+
+}
 function mainLoop() {
   if (flag === 'reset') {
     flag = ''
