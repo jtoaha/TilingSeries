@@ -87,6 +87,14 @@ function draw() {
 
   if(state === 'kaleid')
     kaleid()
+
+  if(state === 'stationary') {
+    for (let square of popArray) {
+      ctx.fillStyle = `rgba(${square.r},${square.g},${square.b},${alpha})`
+      ctx.strokeRect(square.i, square.j, hw, hw)
+      ctx.fillRect(square.i, square.j, hw, hw)
+  }
+}
 }
 
 //Pop-ups Mode: Tiles are set to randomly appear, yet falls into an orderly pattern
