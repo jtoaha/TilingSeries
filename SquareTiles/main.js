@@ -10,7 +10,6 @@
  * Future Goal: Add adjustable parameter fields to HTML so user can test it themselves
  */
 
-
 //Canvas elements
 let canvas = undefined
 let ctx = undefined
@@ -28,10 +27,8 @@ let pushArray
 let frameRate = 30
 
 //State
+let flag //added to make resetting easier. To break out of recursive main loop
 let state = 'pop-ups' //Modes: 'pop-ups', 'kaleid', 'stationary'
-
-
-
 
 function start() {
   canvas = document.getElementById('square-canvas')
@@ -60,32 +57,26 @@ function start() {
     }
   }
   //If Pop-Ups Mode, randomize array:
-  if(state === 'pop-ups')
-    shuffleArray(popArray)
+  if (state === 'pop-ups') shuffleArray(popArray)
 
   mainLoop()
 }
 
 document.addEventListener('DOMContentLoaded', start)
 
-function update() {
-
-
-}
+function update() {}
 
 function draw() {
-  ctx.fillStyle = theme;
+  ctx.fillStyle = theme
   ctx.fillRect(0, 0, canvas.width, canvas.height)
 
-  if(state === 'pop-ups') {
+  if (state === 'pop-ups') {
     popups()
   }
-
 }
 
 //Pop-ups Mode: Tiles are set to randomly appear, yet falls into an orderly pattern
-function popups(){
-
+function popups() {
   //This goes through the pushArray to display whatever squares have been added. It incrementally increases alpha value so it enters canvas by fading in
   for (let square of pushArray) {
     //There are moments square becomes
@@ -115,9 +106,14 @@ function popups(){
 }
 
 function mainLoop() {
-  update()
-  draw()
-  window.setTimeout(mainLoop, 1000 / 60)
+  if (flag === 'reset') {
+    flag = ''
+    start()
+  } else {
+    update()
+    draw()
+    window.setTimeout(mainLoop, 1000 / 60)
+  }
 }
 
 /* Randomize array in-place using Durstenfeld shuffle algorithm */
@@ -131,21 +127,23 @@ function shuffleArray(array) {
 }
 
 //Add Event Handlers to Radio buttons
-$(document).ready(function(){
-  $('input[type=radio]').click(function(){
-      if (this.name === "mode")
-          state = this.value
-      if(this.name ==="theme"){
-        if(this.value==='light') {
-          theme='white'
-          alpha=.25
-        }
-        if(this.value==='dark') {
-          console.log(this.value)
-          theme='black'
-          alpha=.6
-        }
-      }
+$(document).ready(function () {
+  $('input[type=radio]').click(function () {
+    if (this.name === 'mode') {
+      state = this.value
+      flag = 'reset'
+    }
 
-  });
-});
+    if (this.name === 'theme') {
+      if (this.value === 'light') {
+        theme = 'white'
+        alpha = 0.25
+      }
+      if (this.value === 'dark') {
+        console.log(this.value)
+        theme = 'black'
+        alpha = 0.6
+      }
+    }
+  })
+})
