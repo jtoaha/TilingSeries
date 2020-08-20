@@ -1,19 +1,37 @@
+/**
+ * @author: Jamila Toaha
+ * @date: 8/20/20
+ * @Title: Tiling Series: Squares
+ * Created an interactive art series with square tiles.
+ * Has 3 modes.
+ * Pop-ups Mode: Tiles are set to randomly appear, yet falls into an ordered pattern
+ * Kaleidoscope Mode: Tiles' smoothly transitions between color to color continuously
+ * Stationary: Tiles are are not animated
+ * Future Goal: Add adjustable parameter fields to HTML so user can test it themselves
+ */
+
+
+//Canvas elements
 let canvas = undefined
 let ctx = undefined
-var strokeWidth = 5
-var hw = 100
-let r, g, b
-let alpha = .25
-let alphaRate = alpha/50
-r = Math.floor(Math.random() * 256)
-g = Math.floor(Math.random() * 256)
-b = Math.floor(Math.random() * 256)
-let popArray = []
-let pushArray = []
-let frameRate = 20
+let theme = 'white' //Themes: Light and Dark
 
-//for kaleidoscope
-let gradientRate = 20;
+//Properties
+var strokeWidth = 5
+var hw = 100 //Tile size
+let alpha = 0.25 //Dark Mode: .6, Light Mode: .25
+let alphaRate = alpha / 50
+let r, g, b
+
+let popArray
+let pushArray
+let frameRate = 30
+
+//State
+let state = 'pop-ups' //Modes: 'pop-ups', 'kaleid', 'stationary'
+
+
+
 
 function start() {
   canvas = document.getElementById('square-canvas')
@@ -21,10 +39,12 @@ function start() {
   canvas.width = window.innerWidth
   canvas.height = window.innerHeight
   ctx.lineWidth = strokeWidth
-  // ctx.fillStyle = 'black'
-  // ctx.fillRect(0, 0, canvas.width, canvas.height )
-  //ctx.strokeRect(0, 0, hw, hw)
 
+  //Store tiles
+  popArray = []
+  pushArray = []
+
+  //Sets up and retrieves location points for tiles, as well as random colors for tiles and stores in a sorted array
   let rowTracker = 1
   let iStart
   for (let j = (-3 / 4) * hw; j < canvas.height; j += (3 / 4) * hw) {
@@ -36,81 +56,62 @@ function start() {
       g = Math.floor(Math.random() * 256)
       b = Math.floor(Math.random() * 256)
 
-
-    nextR = Math.floor(Math.random() * 256)
-    nextG = Math.floor(Math.random() * 256)
-    nextB = Math.floor(Math.random() * 256)
-
-      popArray.push({ i: i, j: j, r: r, g: g, b: b, alpha: 0, nextR:nextR, nextG:nextG, nextB:nextB, increment: (nextR-r)/gradientRate*-1})
-      // ctx.fillStyle = `rgba(${r},${g},${b}, .25)` //.6 for dark mode //.25 for light mode
+      popArray.push({ i: i, j: j, r: r, g: g, b: b, alpha: 0 })
     }
   }
+  //If Pop-Ups Mode, randomize array:
+  if(state === 'pop-ups')
+    shuffleArray(popArray)
 
-  //If Pop Mode:
-  //shuffleArray(popArray)
   mainLoop()
 }
 
 document.addEventListener('DOMContentLoaded', start)
 
-function update() {}
+function update() {
+
+
+}
 
 function draw() {
-  ctx.fillStyle = 'white'
-  ctx.fillRect(0, 0, canvas.width, canvas.height )
-  //For kaleidoscope colors display
-//Doesn't sync up to each square
-  for (let square of popArray) {
-    console.log(square.r, square.nextR, "TESTING")
-    if(Math.round(square.r) === square.nextR && Math.round(square.g) === square.nextG && Math.round(square.b) === square.nextB) {
-      square.nextR = Math.floor(Math.random() * 256)
-      square.nextG = Math.floor(Math.random() * 256)
-      square.nextB = Math.floor(Math.random() * 256)
-      // square.increment = (square.nextR-square.r)/gradientRate
-    }
+  ctx.fillStyle = theme;
+  ctx.fillRect(0, 0, canvas.width, canvas.height)
 
-    ctx.fillStyle = `rgba(${square.r},${square.g},${square.b},${.5})`
-    ctx.strokeStyle = `rgba(0, 0, 0,${square.alpha*5})`
-    ctx.strokeRect(square.i, square.j, hw, hw)
-    ctx.fillRect(square.i, square.j, hw, hw)
-        //If current values matches up to next values, it's time to have a new set of next values
-
-
-          square.r += (square.nextR-square.r)/gradientRate
-          square.g += (square.nextG-square.g)/gradientRate
-          square.b += (square.nextB-square.b)/gradientRate
-
-
-
-
+  if(state === 'pop-ups') {
+    popups()
   }
 
+}
 
-  // for (let square of pushArray) {
-  //   if (square.alpha <= alpha) square.alpha += alphaRate
-  //   ctx.fillStyle = `rgba(${square.r},${square.g},${square.b},${square.alpha})`
-  //   ctx.strokeStyle = `rgba(0, 0, 0,${square.alpha*5})`
-  //   ctx.strokeRect(square.i, square.j, hw, hw)
-  //   ctx.fillRect(square.i, square.j, hw, hw)
-  // }
+//Pop-ups Mode: Tiles are set to randomly appear, yet falls into an orderly pattern
+function popups(){
 
+  //This goes through the pushArray to display whatever squares have been added. It incrementally increases alpha value so it enters canvas by fading in
+  for (let square of pushArray) {
+    //There are moments square becomes
+    if (square.alpha <= alpha) square.alpha += alphaRate
 
-  // let currentSquare
-  // let pops = Math.floor(Math.random()*3);
-  // if (popArray.length) {
-  //   while(pops > 0){
-  //    if(frameRate-- === 0)currentSquare = popArray.pop()
-  //    else continue
-  //   //Push new Square into the pushArray
-  //   pushArray.push(currentSquare)
-  //     //Cycle through the pushArray to display the squares fading in
+    ctx.fillStyle = `rgba(${square.r},${square.g},${square.b},${square.alpha})`
+    ctx.strokeStyle = `rgba(0, 0, 0,${square.alpha * 5})`
+    ctx.strokeRect(square.i, square.j, hw, hw)
+    ctx.fillRect(square.i, square.j, hw, hw)
+  }
 
-
-  //   frameRate = 30;
-  //     pops--
-  // }
-  // }
-
+  //Kind of like the effect this alpha bug creates, so will leave here, otherwise, can be fixed
+  let currentSquare
+  //Adds anywhere between 1 and 2 tiles at a time according to the frame rate
+  let pops = Math.floor(Math.random() * 3)
+  if (popArray.length) {
+    while (pops > 0) {
+      if (frameRate-- === 0) currentSquare = popArray.pop()
+      else continue
+      //Push new Square into the pushArray
+      pushArray.push(currentSquare)
+      //Cycle through the pushArray to display the squares fading in
+      frameRate = 30
+      pops--
+    }
+  }
 }
 
 function mainLoop() {
@@ -128,3 +129,23 @@ function shuffleArray(array) {
     array[j] = temp
   }
 }
+
+//Add Event Handlers to Radio buttons
+$(document).ready(function(){
+  $('input[type=radio]').click(function(){
+      if (this.name === "mode")
+          state = this.value
+      if(this.name ==="theme"){
+        if(this.value==='light') {
+          theme='white'
+          alpha=.25
+        }
+        if(this.value==='dark') {
+          console.log(this.value)
+          theme='black'
+          alpha=.6
+        }
+      }
+
+  });
+});

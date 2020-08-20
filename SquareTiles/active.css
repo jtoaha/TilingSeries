@@ -1,0 +1,13 @@
+body{
+  font-family: 'Futura';
+}
+
+#menu{
+  display: flex;
+  flex-direction:row;
+  justify-content: space-around;
+}
+
+dt{
+  font-weight: bold;
+}
