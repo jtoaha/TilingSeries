@@ -10,7 +10,10 @@ g = Math.floor(Math.random() * 256)
 b = Math.floor(Math.random() * 256)
 let popArray = []
 let pushArray = []
-let frameRate = 30
+let frameRate = 20
+
+//for kaleidoscope
+let gradientRate = 20;
 
 function start() {
   canvas = document.getElementById('square-canvas')
@@ -33,13 +36,18 @@ function start() {
       g = Math.floor(Math.random() * 256)
       b = Math.floor(Math.random() * 256)
 
-      popArray.push({ i: i, j: j, r: r, g: g, b: b, alpha: 0})
+
+    nextR = Math.floor(Math.random() * 256)
+    nextG = Math.floor(Math.random() * 256)
+    nextB = Math.floor(Math.random() * 256)
+
+      popArray.push({ i: i, j: j, r: r, g: g, b: b, alpha: 0, nextR:nextR, nextG:nextG, nextB:nextB, increment: (nextR-r)/gradientRate*-1})
       // ctx.fillStyle = `rgba(${r},${g},${b}, .25)` //.6 for dark mode //.25 for light mode
     }
   }
 
   //If Pop Mode:
-  shuffleArray(popArray)
+  //shuffleArray(popArray)
   mainLoop()
 }
 
@@ -50,32 +58,58 @@ function update() {}
 function draw() {
   ctx.fillStyle = 'white'
   ctx.fillRect(0, 0, canvas.width, canvas.height )
+  //For kaleidoscope colors display
+//Doesn't sync up to each square
+  for (let square of popArray) {
+    console.log(square.r, square.nextR, "TESTING")
+    if(Math.round(square.r) === square.nextR && Math.round(square.g) === square.nextG && Math.round(square.b) === square.nextB) {
+      square.nextR = Math.floor(Math.random() * 256)
+      square.nextG = Math.floor(Math.random() * 256)
+      square.nextB = Math.floor(Math.random() * 256)
+      // square.increment = (square.nextR-square.r)/gradientRate
+    }
 
-
-  for (let square of pushArray) {
-    if (square.alpha <= alpha) square.alpha += alphaRate
-    ctx.fillStyle = `rgba(${square.r},${square.g},${square.b},${square.alpha})`
+    ctx.fillStyle = `rgba(${square.r},${square.g},${square.b},${.5})`
     ctx.strokeStyle = `rgba(0, 0, 0,${square.alpha*5})`
     ctx.strokeRect(square.i, square.j, hw, hw)
     ctx.fillRect(square.i, square.j, hw, hw)
+        //If current values matches up to next values, it's time to have a new set of next values
+
+
+          square.r += (square.nextR-square.r)/gradientRate
+          square.g += (square.nextG-square.g)/gradientRate
+          square.b += (square.nextB-square.b)/gradientRate
+
+
+
+
   }
 
 
-  let currentSquare
-  let pops = Math.floor(Math.random()*3);
-  if (popArray.length) {
-    while(pops > 0){
-     if(frameRate-- === 0)currentSquare = popArray.pop()
-     else continue
-    //Push new Square into the pushArray
-    pushArray.push(currentSquare)
-      //Cycle through the pushArray to display the squares fading in
+  // for (let square of pushArray) {
+  //   if (square.alpha <= alpha) square.alpha += alphaRate
+  //   ctx.fillStyle = `rgba(${square.r},${square.g},${square.b},${square.alpha})`
+  //   ctx.strokeStyle = `rgba(0, 0, 0,${square.alpha*5})`
+  //   ctx.strokeRect(square.i, square.j, hw, hw)
+  //   ctx.fillRect(square.i, square.j, hw, hw)
+  // }
 
 
-    frameRate = 30;
-      pops--
-  }
-  }
+  // let currentSquare
+  // let pops = Math.floor(Math.random()*3);
+  // if (popArray.length) {
+  //   while(pops > 0){
+  //    if(frameRate-- === 0)currentSquare = popArray.pop()
+  //    else continue
+  //   //Push new Square into the pushArray
+  //   pushArray.push(currentSquare)
+  //     //Cycle through the pushArray to display the squares fading in
+
+
+  //   frameRate = 30;
+  //     pops--
+  // }
+  // }
 
 }
 
