@@ -5,14 +5,21 @@ let degrees = (2 * Math.PI) / numSquares
 
 let colorTheme = ['#ffcc00', '#ff9900', '#ff6600', '#bf0603', '#cc3399', '#990066', '#5a189a', '#3399cc', '#006699', '#ccee66', '#99cc33', '#669900']
 
+
+
 let theme = '#fffff' // for Light or Dark mode
+let colorAnimationCount = 0;
+let frameCount = 0;
 
 function start() {
   canvas = document.getElementById('dodeca-rings')
   ctx = canvas.getContext('2d')
   canvas.width = window.innerWidth
   canvas.height = window.innerHeight
+  ctx.imageSmoothingEnabled = true;
+  ctx.imageSmoothingQuality = 'high';
   ctx.translate(canvas.width / 2, canvas.height / 2)
+  ctx.globalAlpha = 0.01;
   mainLoop()
 }
 
@@ -29,15 +36,20 @@ function draw() {
   // sin15 = halfofSquareside/circleradius
   // squareside = 2* halfofSquareside
   ctx.save()
-  let circleRadius = 20
+  let circleRadius = 30
   let addHeight = 0
-  for(let i= 0; i <8; i++) {
+  for(let i= 0; i <6; i++) {
     ctx.rotate(degrees/2)
     addHeight+=createRing (circleRadius+addHeight)
   }
 
 
   ctx.restore()
+
+  if(frameCount++ === 10){
+    colorAnimationCount++
+    frameCount = 0
+  }
 }
 
 function mainLoop() {
@@ -58,9 +70,12 @@ function createRing(circleRadius){
     ctx.save()
     ctx.translate(circleRadius, 0)
     ctx.rotate(-Math.PI / 4)
-    ctx.fillStyle = colorTheme[i]
-    ctx.fillRect(0, 0, squareSide, squareSide)
-    ctx.strokeRect(0, 0, squareSide, squareSide)
+    //Adding conditional so that only certain colors can be animation
+    if(i <= colorAnimationCount) {
+      ctx.fillStyle = colorTheme[i]
+      ctx.fillRect(0, 0, squareSide, squareSide)
+      ctx.strokeRect(0, 0, squareSide, squareSide)
+    }
     ctx.restore()
   }
 
@@ -68,3 +83,5 @@ function createRing(circleRadius){
   // return squareSide*Math.sqrt(2)/2
   return Math.sin(Math.PI/3)*squareSide
 }
+
+
