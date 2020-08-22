@@ -7,11 +7,31 @@
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="active.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="./main.js"></script>
+
   </head>
   <body>
 
     <canvas width=500 height=500 id='dodeca-rings'></canvas>
+    <div >Tiling Series: DodecaSquare Rings by jamila toaha
+      <dl id='menu'>
+        <dt>Theme:</dt>
+            <dd><input type='radio' id='light' name='theme' value='light' checked><label for='light'>Light</label></dd>
+            <dd><input type='radio' id='dark' name='theme' value='dark'><label for='dark'>Dark</label></dd>
 
+      <dt>Adjust:</dt>
+            <dd><label for='numRings'>Number of Rings: 1</label><input type='range' min=1 max=10 id='numRings' name='numRings' value='6'>10</dd>
+            <dd><input type='radio' id='pop-ups' name='mode' value='pop-ups' checked><label for='pops-ups'>Pop-ups</label></dd>
+            <dd><input type='radio' id='stationary' name='mode' value='stationary'><label for='stationary'>Stationary</label></dd>
+
+        <dt>Mode:</dt>
+          <dd><input type='radio' id='kaleid' name='mode' value='kaleid'><label for='kaleid'>Kaleidoscope</label></dd>
+          <dd><input type='radio' id='pop-ups' name='mode' value='pop-ups' checked><label for='pops-ups'>Pop-ups</label></dd>
+          <dd><input type='radio' id='stationary' name='mode' value='stationary'><label for='stationary'>Stationary</label></dd>
+
+      </dl>
+
+    </div>
   </body>
 </html>
