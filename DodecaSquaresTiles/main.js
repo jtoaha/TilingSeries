@@ -8,6 +8,7 @@ let numSquares = 12
 let degrees = (2 * Math.PI) / numSquares
 let theme = '#ffffff' // Light or Dark Mode
 
+let border = false;
 let colorTheme = [
   '#ffcc00',
   '#ff9900',
@@ -30,6 +31,9 @@ let numRings
 let ringsAnimationCount
 let circleRadius
 
+//Mode
+let mode = 'animated'
+
 function start() {
   canvas = document.getElementById('dodeca-rings')
   ctx = canvas.getContext('2d')
@@ -38,13 +42,22 @@ function start() {
   ctx.imageSmoothingEnabled = true
   ctx.imageSmoothingQuality = 'high'
   ctx.translate(canvas.width / 2, canvas.height / 2)
+  ctx.fillStyle = theme
+  ctx.fillRect(-canvas.width/2, -canvas.height/2, canvas.width*2, canvas.height*2)
+
   ctx.globalAlpha = 0.1 //.01 for color animation
-  colorAnimationCount = 0
+  if(mode === 'animated') colorAnimationCount = 0
+  else colorAnimationCount= colorTheme.length
+  if(mode === 'animated')   ringsAnimationCount = 0
+  else ringsAnimationCount= numRings
+
   frameCount = 0
   circleRadius = circleRadius || 30
-  console.log(circleRadius, "CHECK")
+  console.log("Circle Radius (in pixels):",circleRadius )
   numRings = numRings || 6
-  ringsAnimationCount = 0
+    console.log( "Number of Rings:", numRings)
+
+
   mainLoop()
 }
 
@@ -53,8 +66,6 @@ document.addEventListener('DOMContentLoaded', start)
 function update() {}
 
 function draw() {
-  //  ctx.fillStyle = 'black'
-  //  ctx.fillRect(-canvas.width/2, -canvas.height/2, canvas.width*2, canvas.height*2)
 
   ctx.save()
   let addHeight = 0
@@ -97,7 +108,6 @@ function mainLoop() {
 function createRing(circleRadius) {
   let squareSide = 2 * Math.sin(degrees / 2) * circleRadius
 
-  let degreesUpdate
 
   ctx.globalAlpha = 0.03
   for (let i = 0; i < 12; i++) {
@@ -110,7 +120,7 @@ function createRing(circleRadius) {
     if (i <= colorAnimationCount) {
       ctx.fillStyle = colorTheme[i]
       ctx.fillRect(0, 0, squareSide, squareSide)
-      //ctx.strokeRect(0, 0, squareSide, squareSide)
+      if(border)ctx.strokeRect(0, 0, squareSide, squareSide)
     }
 
     ctx.restore()
@@ -146,17 +156,41 @@ $(document).ready(function () {
       circleRadius = Number(this.value)
       flag = 'reset'
     }
-
+  })
+  $('input[type=radio]').click(function () {
     if (this.name === 'theme') {
       if (this.value === 'light') {
         theme = 'white'
-        alpha = 0.25
+        flag = 'reset'
       }
       if (this.value === 'dark') {
         console.log(this.value)
         theme = 'black'
-        alpha = 0.6
+        flag = 'reset'
+      }
+    }
+    if (this.name === 'mode') {
+      if (this.value === 'animated') {
+        console.log(this.value)
+        mode = 'animated'
+        flag = 'reset'
+      }
+      if (this.value === 'stationary') {
+        console.log(this.value)
+        mode = 'stationary'
+        flag = 'reset'
       }
     }
   })
+
+  $( "#hasBorder" ).on( "click", function(){
+    console.log('yooo')
+    if ($('#hasBorder').prop('checked'))
+    border = true
+    else
+    border = false
+
+    flag = 'reset'
+  })
+
 })
