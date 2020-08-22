@@ -24,7 +24,27 @@ function draw() {
   // SOH - sin15 = opposite/hypotenuse
   // sin15 = halfofSquareside/circleradius
   // squareside = 2* halfofSquareside
-  let circleRadius = 50
+  ctx.save()
+  let circleRadius = 20
+  let addHeight = 0
+  for(let i= 0; i <8; i++) {
+    ctx.rotate(degrees/2)
+    addHeight+=createRing (circleRadius+addHeight)
+  }
+
+
+  ctx.restore()
+}
+
+function mainLoop() {
+  update()
+  draw()
+  window.setTimeout(mainLoop, 1000 / 60)
+}
+
+//Creates a ring from 12 squares
+// returns height
+function createRing(circleRadius){
   let squareSide = 2 * Math.sin(degrees / 2) * circleRadius
 
   let degreesUpdate
@@ -37,10 +57,8 @@ function draw() {
     ctx.strokeRect(0, 0, squareSide, squareSide)
     ctx.restore()
   }
-}
 
-function mainLoop() {
-  update()
-  draw()
-  window.setTimeout(mainLoop, 1000 / 60)
+  //To find radius of next corresponding ring need to find height that is added by the squares - return length of half a diagonal of the square
+  // return squareSide*Math.sqrt(2)/2
+  return Math.sin(Math.PI/3)*squareSide
 }
