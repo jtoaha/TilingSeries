@@ -28,6 +28,7 @@ let frameCount
 
 let numRings
 let ringsAnimationCount
+let circleRadius
 
 function start() {
   canvas = document.getElementById('dodeca-rings')
@@ -40,6 +41,8 @@ function start() {
   ctx.globalAlpha = 0.1 //.01 for color animation
   colorAnimationCount = 0
   frameCount = 0
+  circleRadius = circleRadius || 30
+  console.log(circleRadius, "CHECK")
   numRings = numRings || 6
   ringsAnimationCount = 0
   mainLoop()
@@ -53,12 +56,7 @@ function draw() {
   //  ctx.fillStyle = 'black'
   //  ctx.fillRect(-canvas.width/2, -canvas.height/2, canvas.width*2, canvas.height*2)
 
-  //   degrees/2 = 30/2 = 15
-  // SOH - sin15 = opposite/hypotenuse
-  // sin15 = halfofSquareside/circleradius
-  // squareside = 2* halfofSquareside
   ctx.save()
-  let circleRadius = 30
   let addHeight = 0
 
   for (let i = 0; i < ringsAnimationCount; i++) {
@@ -128,6 +126,12 @@ $(document).ready(function () {
   $('input[type=range]').click(function () {
     if (this.name === 'numRings') {
       numRings = this.value
+      flag = 'reset'
+    }
+
+    if(this.name === 'circleRadius') {
+      console.log(this.value, 'yoo')
+      circleRadius = Number(this.value)
       flag = 'reset'
     }
 
