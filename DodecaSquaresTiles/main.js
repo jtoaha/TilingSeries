@@ -11,6 +11,9 @@ let theme = '#fffff' // for Light or Dark mode
 let colorAnimationCount = 0;
 let frameCount = 0;
 
+let numRings=5;
+let ringsAnimationCount = 0;
+
 function start() {
   canvas = document.getElementById('dodeca-rings')
   ctx = canvas.getContext('2d')
@@ -19,7 +22,7 @@ function start() {
   ctx.imageSmoothingEnabled = true;
   ctx.imageSmoothingQuality = 'high';
   ctx.translate(canvas.width / 2, canvas.height / 2)
-  ctx.globalAlpha = 0.01;
+  ctx.globalAlpha = 0.1;//.01 for color animation
   mainLoop()
 }
 
@@ -38,7 +41,8 @@ function draw() {
   ctx.save()
   let circleRadius = 30
   let addHeight = 0
-  for(let i= 0; i <6; i++) {
+
+  for(let i= 0; i <= ringsAnimationCount; i++) {
     ctx.rotate(degrees/2)
     addHeight+=createRing (circleRadius+addHeight)
   }
@@ -49,6 +53,10 @@ function draw() {
   if(frameCount++ === 10){
     colorAnimationCount++
     frameCount = 0
+  }
+  if(frameCount++ ===30){
+    if(ringsAnimationCount < numRings) ringsAnimationCount++
+    frameCount = 0;
   }
 }
 
@@ -64,6 +72,7 @@ function createRing(circleRadius){
   let squareSide = 2 * Math.sin(degrees / 2) * circleRadius
 
   let degreesUpdate
+  ctx.globalAlpha = 0.05;
   for (let i = 0; i < 12; i++) {
     ctx.rotate(degrees)
 
@@ -71,11 +80,13 @@ function createRing(circleRadius){
     ctx.translate(circleRadius, 0)
     ctx.rotate(-Math.PI / 4)
     //Adding conditional so that only certain colors can be animation
-    if(i <= colorAnimationCount) {
+    // if(i <= colorAnimationCount) {
       ctx.fillStyle = colorTheme[i]
       ctx.fillRect(0, 0, squareSide, squareSide)
       ctx.strokeRect(0, 0, squareSide, squareSide)
-    }
+    //}
+
+
     ctx.restore()
   }
 
