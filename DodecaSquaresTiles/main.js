@@ -121,16 +121,28 @@ function createRing(circleRadius) {
   return Math.sin(Math.PI / 3) * squareSide
 }
 
+function randomizeColors(){
+  let r, g, b
+  colorTheme = []
+  for (let i = 0; i < 12; i++) {
+    r = Math.floor(Math.random() * 256)
+    g = Math.floor(Math.random() * 256)
+    b = Math.floor(Math.random() * 256)
+    colorTheme.push(`rgb(${r},${g},${b})`)
+  }
+  flag = 'reset'
+}
 //Add Event Handlers to input items
 $(document).ready(function () {
   $('input[type=range]').click(function () {
     if (this.name === 'numRings') {
+      console.log(this.value, 'numRings')// future task: append to html
       numRings = this.value
       flag = 'reset'
     }
 
     if(this.name === 'circleRadius') {
-      console.log(this.value, 'yoo')
+      console.log(this.value, 'circleRadius')// future task: append to html
       circleRadius = Number(this.value)
       flag = 'reset'
     }
