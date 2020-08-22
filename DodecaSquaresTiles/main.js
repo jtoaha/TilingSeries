@@ -3,6 +3,10 @@ var ctx = undefined
 let numSquares = 12
 let degrees = (2 * Math.PI) / numSquares
 
+let colorTheme = ['#ffcc00', '#ff9900', '#ff6600', '#bf0603', '#cc3399', '#990066', '#5a189a', '#3399cc', '#006699', '#ccee66', '#99cc33', '#669900']
+
+let theme = '#fffff' // for Light or Dark mode
+
 function start() {
   canvas = document.getElementById('dodeca-rings')
   ctx = canvas.getContext('2d')
@@ -54,6 +58,8 @@ function createRing(circleRadius){
     ctx.save()
     ctx.translate(circleRadius, 0)
     ctx.rotate(-Math.PI / 4)
+    ctx.fillStyle = colorTheme[i]
+    ctx.fillRect(0, 0, squareSide, squareSide)
     ctx.strokeRect(0, 0, squareSide, squareSide)
     ctx.restore()
   }
