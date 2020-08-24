@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>Arc Tiles</title>
+    <meta name="description" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="active.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="./main.js"></script>
+  </head>
+  <body>
+    <canvas width="500" height="500" id="dodeca-rings"></canvas>
+    <div>
+      Tiling Series: ArcTiles by jamila toaha
+      <dl id="menu">
+        <div>
+          <dt>Theme:</dt>
+          <dd>
+            <input
+              type="radio"
+              id="light"
+              name="theme"
+              value="light"
+              checked
+            /><label for="light">Light</label>
+          </dd>
+          <dd>
+            <input type="radio" id="dark" name="theme" value="dark" /><label
+              for="dark"
+              >Dark</label
+            >
+          </dd>
+        </div>
+        <div>
+          <dt>Adjust:</dt>
+          <dd>
+            <label for="numRings">Number of Rings: 1</label
+            ><input
+              type="range"
+              min="1"
+              max="10"
+              id="numRings"
+              name="numRings"
+              value="6"
+            />10
+          </dd>
+          <dd>
+            <label for="circleRadius">Size of Center: 5px </label
+            ><input
+              type="range"
+              min="5"
+              max="100"
+              id="circleRadius"
+              name="circleRadius"
+              value="30"
+            />100px
+          </dd>
+          <dd>
+            <label for="nPoints">__-Pointed Star (Default is 12): 2</label
+            ><input
+              type="range"
+              min="2"
+              max="30"
+              id="nPoints"
+              name="nPoints"
+              value="12"
+            />30
+          </dd>
+          <dd><button onClick="randomizeColors()">Randomize Colors</button></dd>
+          <dd>
+            <input id="hasBorder" type="checkbox" /><label for="hasBorder"
+              >Border</label
+            >
+          </dd>
+        </div>
+        <div>
+          <dt>Mode:</dt>
+          <dd>
+            <input
+              type="radio"
+              id="animated"
+              name="mode"
+              value="animated"
+              checked
+            /><label for="animated" checked>Animated</label>
+          </dd>
+          <dd>
+            <input
+              type="radio"
+              id="stationary"
+              name="mode"
+              value="stationary"
+            /><label for="stationary">Stationary</label>
+          </dd>
+        </div>
+      </dl>
+    </div>
+  </body>
+</html>
+
