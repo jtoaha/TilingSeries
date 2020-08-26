@@ -31,8 +31,13 @@ document.addEventListener('DOMContentLoaded', start)
 function update() {}
 
 function draw() {
-
-  //ctx.fillRect(0, 0, canvas.width, canvas.height)
+  ctx.fillStyle = '#ffffff'
+  ctx.fillRect(
+    -canvas.width / 2,
+    -canvas.height / 2,
+    canvas.width * 2,
+    canvas.height * 2
+  )
   for (let i = 0; i < numCircles; i++) {
 
     ctx.fillStyle = colorTheme[i]
