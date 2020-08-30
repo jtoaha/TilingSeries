@@ -1,21 +1,16 @@
 var canvas = undefined
-var canvasContext = undefined
+var ctx = undefined
+var flag = '';
 
 let numCircles = 10
 let degrees = (2 * Math.PI) / numCircles
 let circleRadius = 100
+let animX
 
-let animX = 0
 
 let theme = '#ffffff'
-let colorTheme = []
-
-for (let i = 0; i < numCircles; i++) {
-  let r = Math.floor(Math.random() * 256)
-  let g = Math.floor(Math.random() * 256)
-  let b = Math.floor(Math.random() * 256)
-  colorTheme.push(`rgba(${r},${g},${b}, .25 )`)
-}
+let alpha = 0.25 //.25 for Light Mode, .60 for Dark Mode
+let colorTheme
 
 function start() {
   canvas = document.getElementById('circle-canvas')
@@ -24,12 +19,23 @@ function start() {
   canvas.height = window.innerHeight
   ctx.translate(canvas.width / 2, canvas.height / 2)
   //ctx.globalAlpha = 0.1
+  colorTheme = []
+  for (let i = 0; i < numCircles; i++) {
+    let r = Math.floor(Math.random() * 256)
+    let g = Math.floor(Math.random() * 256)
+    let b = Math.floor(Math.random() * 256)
+    colorTheme.push(`rgba(${r},${g},${b}, ${alpha} )`)
+  }
+  animX = 0;
+  ctx.save()
   mainLoop()
 }
 
 document.addEventListener('DOMContentLoaded', start)
 
-function update() {}
+function update() {
+  animX += 0.1
+}
 
 function draw() {
   ctx.fillStyle = theme
@@ -50,13 +56,18 @@ function draw() {
     ctx.restore()
     ctx.rotate(degrees)
   }
-  animX += 0.1
 }
 
 function mainLoop() {
-  update()
-  draw()
-  window.setTimeout(mainLoop, 1000 / 60)
+  if (flag === 'reset') {
+    ctx.restore()
+    flag = ''
+    start()
+  } else {
+    update()
+    draw()
+    window.setTimeout(mainLoop, 1000 / 60)
+  }
 }
 
 function easeInSine(x) {
@@ -74,8 +85,9 @@ $(document).ready(function () {
     if (this.name === 'numCircles') {
       console.log(this.value, 'numCircles') // future task: append to html
       numCircles = this.value
-      //flag = 'reset'
-    }})
+      flag = 'reset'
+    }
+  })
   //User can choose dark theme or light theme
   $('input[type=radio]').click(function () {
     if (this.name === 'theme') {
@@ -90,6 +102,4 @@ $(document).ready(function () {
       }
     }
   })
-
-
 })
