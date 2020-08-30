@@ -1,16 +1,27 @@
 var canvas = undefined
 var ctx = undefined
-var flag = '';
+var flag = ''
 
 let numCircles = 10
 let degrees = (2 * Math.PI) / numCircles
 let circleRadius = 100
 let animX
 
-
-let theme = '#ffffff'
+let theme = 'light'
 let alpha = 0.25 //.25 for Light Mode, .60 for Dark Mode
 let colorTheme
+
+function updateColorTheme() {
+  colorTheme = []
+  for (let i = 0; i < numCircles; i++) {
+    let r = Math.floor(Math.random() * 256)
+    let g = Math.floor(Math.random() * 256)
+    let b = Math.floor(Math.random() * 256)
+    colorTheme.push(`rgba(${r},${g},${b}, ${alpha} )`)
+  }
+}
+
+updateColorTheme()
 
 function start() {
   canvas = document.getElementById('circle-canvas')
@@ -19,15 +30,8 @@ function start() {
   canvas.height = window.innerHeight
   ctx.translate(canvas.width / 2, canvas.height / 2)
   //ctx.globalAlpha = 0.1
-  colorTheme = []
-  for (let i = 0; i < numCircles; i++) {
-    let r = Math.floor(Math.random() * 256)
-    let g = Math.floor(Math.random() * 256)
-    let b = Math.floor(Math.random() * 256)
-    colorTheme.push(`rgba(${r},${g},${b}, ${alpha} )`)
-  }
-  animX = 0;
-  ctx.save()
+  updateColorTheme()
+  animX = 0
   mainLoop()
 }
 
@@ -38,7 +42,10 @@ function update() {
 }
 
 function draw() {
-  ctx.fillStyle = theme
+
+  if(theme === 'light') ctx.fillStyle = '#ffffff'
+  if(theme === 'dark') ctx.fillStyle = '#000000'
+
   ctx.fillRect(
     -canvas.width / 2,
     -canvas.height / 2,
@@ -51,8 +58,12 @@ function draw() {
     ctx.beginPath()
     ctx.translate(easeInQuad(animX), 0)
     ctx.ellipse(0, 0, circleRadius, circleRadius, 0, 0, Math.PI * 2)
+    if(theme === 'light') ctx.strokeStyle = '#000000'
+    if(theme === 'dark') ctx.strokeStyle = '#ffffff'
+
     ctx.stroke()
     ctx.fill()
+
     ctx.restore()
     ctx.rotate(degrees)
   }
@@ -60,7 +71,6 @@ function draw() {
 
 function mainLoop() {
   if (flag === 'reset') {
-    ctx.restore()
     flag = ''
     start()
   } else {
@@ -92,13 +102,17 @@ $(document).ready(function () {
   $('input[type=radio]').click(function () {
     if (this.name === 'theme') {
       if (this.value === 'light') {
-        theme = 'white'
+        theme = 'light'
         flag = 'reset'
+        alpha = 0.25
+        ctx.strokeStyle = '#000000'
       }
       if (this.value === 'dark') {
         console.log(this.value)
-        theme = 'black'
+        theme = 'dark'
         flag = 'reset'
+        alpha = 0.5
+        ctx.strokeStyle = '#ffffff'
       }
     }
   })
