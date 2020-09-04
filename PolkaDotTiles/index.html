@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Polka Dot Tiles</title>
+    <link rel='stylesheet' href="active.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+  </head>
+  <body>
+    <div id="tiling-area">
+      <canvas id="square-canvas" width="800" height="480"></canvas>
+      <div >Tiling Series: Polka Dots by jamila toaha
+        <dl id='menu'>
+          <dt>Theme:</dt>
+              <dd><input type='radio' id='light' name='theme' value='light' checked><label for='light'>Light</label></dd>
+              <dd><input type='radio' id='dark' name='theme' value='dark'><label for='dark'>Dark</label></dd>
+
+          <dt>Mode:</dt>
+            <dd><input type='radio' id='kaleid' name='mode' value='kaleid'><label for='kaleid'>Kaleidoscope</label></dd>
+            <dd><input type='radio' id='pop-ups' name='mode' value='pop-ups' checked><label for='pops-ups'>Pop-ups</label></dd>
+            <dd><input type='radio' id='stationary' name='mode' value='stationary'><label for='stationary'>Stationary</label></dd>
+
+        </dl>
+
+      </div>
+    </div>
+    <script src='main.js' defer></script>
+  </body>
+</html>
