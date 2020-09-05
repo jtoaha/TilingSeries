@@ -155,8 +155,13 @@ function kaleid() {
 
     ctx.fillStyle = `rgba(${square.r},${square.g},${square.b},${0.5})`
     ctx.strokeStyle = `rgba(0, 0, 0,${square.alpha * 5})`
-    ctx.strokeRect(square.i, square.j, hw, hw)
-    ctx.fillRect(square.i, square.j, hw, hw)
+    // ctx.strokeRect(square.i, square.j, hw, hw)
+    // ctx.fillRect(square.i, square.j, hw, hw)
+    ctx.beginPath()
+    //ctx.translate(easeInQuad(animX), 0)
+    ctx.ellipse(square.i, square.j, circleRadius, circleRadius, 0, 0, Math.PI * 2)
+    ctx.fill()
+
     //If current values matches up to next values, it's time to have a new set of next values
 
     square.r += (square.nextR - square.r) / gradientRate
