@@ -43,11 +43,11 @@ function start() {
   //Sets up and retrieves location points for tiles, as well as random colors for tiles and stores in a sorted array
   let rowTracker = 1
   let iStart
-  for (let j = (-3 / 4) * hw; j < canvas.height; j += (3 / 4) * hw) {
+  for (let j = circleRadius/2; j < canvas.height; j += circleRadius) {
     if (rowTracker % 2 === 0) iStart = 0
-    else iStart = (-3 / 4) * hw
+    else iStart = circleRadius/2;
     rowTracker++
-    for (let i = iStart; i < canvas.width; i += (5 / 4) * hw) {
+    for (let i = iStart; i < canvas.width; i += 2.618*circleRadius) {
       r = Math.floor(Math.random() * 256)
       g = Math.floor(Math.random() * 256)
       b = Math.floor(Math.random() * 256)
